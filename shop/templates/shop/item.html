@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ item.name }}
+{% endblock %}
+
+{% block body %}
+    <h3>{{ item.name }}</h3>
+    <img src="..." class="card-img-top" alt="...">
+    <p>Цена: {{ item.price }} руб.</p>
+    <p>На складе: {{ item.count }}</p>
+    <h4>{{ item.desc }}</h4>
+    <a href="#" class="btn btn-primary">В корзину</a>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Обновление товара
+{% endblock %}
+
+{% block body %}
+<form action="" method="post">
+    {% csrf_token %}
+    <p>Добавление товара</p>
+    {% for field in form %}
+        <div class="mb-3">
+            {% if field.errors %}
+                <div class="alert alert-danger">
+                    {{ field.errors }}
+                </div>
+            {% endif %}
+
+            {{ field.label }}
+            {{ field }}
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Применить</button>
+</form>
+{% endblock %}

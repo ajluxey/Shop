@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Добавление товара
+{% endblock %}
+
+{% block body %}
+<form action="" method="post">
+    {% csrf_token %}
+    <p>Добавление товара</p>
+    {% for field in form %}
+        <div class="mb-3">
+            {% if field.errors %}
+                <div class="alert alert-danger">
+                    {{ field.errors }}
+                </div>
+            {% endif %}
+
+            {{ field.label }}
+            {{ field }}
+        </div>
+    {% endfor %}
+<!--    <div class="mb-3">-->
+<!--        <label for="item_name" class="form-label">Название товара</label>-->
+<!--        <input type="text" class="form-control" id="item_name">-->
+<!--    </div>-->
+<!--    <div class="mb-3">-->
+<!--        <label for="item_desc" class="form-label">Описание</label>-->
+<!--        <input type="password" class="form-control" id="item_desc">-->
+<!--    </div>-->
+<!--    <div class="mb-3">-->
+<!--        <label for="item_price" class="form-label">Цена</label>-->
+<!--        <input type="text" class="form-control" id="item_price">-->
+<!--    </div>-->
+<!--    <div class="mb-3">-->
+<!--        <label for="item_count" class="form-label">Количество</label>-->
+<!--        <input type="text" class="form-control" id="item_count">-->
+<!--    </div>-->
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
