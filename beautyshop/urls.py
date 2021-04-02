@@ -21,5 +21,6 @@ from .views import redirect_to_shop
 urlpatterns = [
     path('', redirect_to_shop, name='home'),
     path('admin/', admin.site.urls),
-    path('shop/', include('shop.urls'))
+    path('shop/', include('shop.urls')),
+    path('users/', include('users.urls'))
 ]
