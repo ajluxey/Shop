@@ -21,7 +21,7 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'catalog' %}">Каталог</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Корзина</a>
+                        <a class="nav-link" href="{% url 'cart' %}">Корзина</a>
                     </li>
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">
@@ -42,12 +42,6 @@
             </div>
         </div>
     </nav>
-    {% if request.user.is_authenticated %}
-      AUTHED
-    {% else %}
-      {{ request.user }}
-    {% endif %}
-
     {% block body %}
     {% endblock %}
 

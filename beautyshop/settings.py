@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-    'shop'
+    'shop',
+    'cart'
 ]
 
 MIDDLEWARE = [
@@ -118,3 +119,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGOUT_REDIRECT_URL = '/'
+CART_SESSION_ID = 'cart'

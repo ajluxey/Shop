@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Корзина
+{% endblock %}
+
+{% block body %}
+    <h3>Корзина</h3>
+    {% for item in items %}
+        <div class="card mb-3" style="width: 18rem;">
+            <div class="card-body">
+                <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
+    <!--                        <h5 class="card-title">{{ item.name }}</h5>-->
+                <img src="..." class="card-img-top" alt="...">
+                <p class="card-text">{{ item.desc }}</p>
+                <p class="card-text">{{ item.price }} руб.</p>
+                <a href="#" class="btn btn-primary">В корзину</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
