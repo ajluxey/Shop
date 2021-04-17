@@ -10,6 +10,7 @@ class CartDetail(View):
         cart = Cart(request, Item)
         items = cart.get_items()
         total_price = cart.get_total_price()
+        print(cart.get_items())
         return render(request, 'cart/cart_detail.html', context={'items': items,
                                                                  'total_price': total_price})
 

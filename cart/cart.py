@@ -1,5 +1,6 @@
 from django.conf import settings
 from decimal import Decimal
+from .models import UserCart
 
 
 class Cart:
@@ -19,6 +20,18 @@ class Cart:
         if update_quantity:
             self.cart[item_id]['count'] += count
         self.save()
+
+    def import_item_from_db(self, user_id):
+        user_item_count = UserCart.objects.filter(user_id=user_id)
+        item_ids, counts = user_item_count.values('item_id', 'count')       # ? че каво
+        items = self.item_class.objects.filter(id__in=item_ids)
+        for item, count in zip(items, counts):
+            self.add_item(item, count)
+        user_item_count.delete()
+
+    def export_cart_to_db(self, user_id):
+        for item_id in self.cart.keys():
+            UserCart.objects.create(user_id=user_id, item_id=item_id, count=self.cart[item_id]['count'])
 
     def remove(self, item):
         item_id = str(item.id)
@@ -43,16 +56,16 @@ class Cart:
     def save(self):
         self.session.modified = True
 
-    def __iter__(self):
-        item_ids = self.cart.keys()
-        items = self.item_class.objects.filter(id__in=item_ids)
-        cart = self.cart.copy()
-        for item in items:
-            cart[str(item.id)]['item'] = item
-        for item in cart.values():
-            item['price'] = Decimal(item['price'])
-            item['total_price'] = item['price'] * item['count']
-            yield item
+    # def __iter__(self):         # нужен ли вообще итератор?
+    #     item_ids = self.cart.keys()
+    #     items = self.item_class.objects.filter(id__in=item_ids)
+    #     cart = self.cart.copy()
+    #     for item in items:                      # нужно ли?
+    #         cart[str(item.id)]['item'] = item   # вот это
+    #     for item in cart.values():
+    #         item['price'] = Decimal(item['price'])
+    #         item['total_price'] = item['price'] * item['count']
+    #         yield item
 
     def __len__(self):
         return sum(item['count'] for item in self.cart.values())
