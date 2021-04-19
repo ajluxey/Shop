@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     Корзина
+{% endblock %}
+
+{% block js_scripts %}
+    <script src="{% static 'js/cart_manager.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -10,13 +15,21 @@
         <h3>Корзина</h3>
         {% if items %}
             {% for item in items %}
-                <div class="card mb-3" style="width: 18rem;">
+                <div class="card mb-3" style="width: 18rem;" id="{{item.id}}">
                     <div class="card-body">
                         <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
         <!--                <h5 class="card-title">{{ item.name }}</h5>-->
                         <img src="..." class="card-img-top" alt="...">
                         <p class="card-text">{{ item.desc }}</p>
                         <p class="card-text">{{ item.price }} руб.</p>
+                        {% for item_id, count in id_count.items %}
+                            {% if item_id == item.id|stringformat:"i" %}
+                                <p class="card-text">Количество</p>
+                                <div class="d-inline-block"><button type="button" class="btn btn-light" name="inc" value="{{ item.id }}">-</button></div>
+                                <div class="d-inline-block"><p class="card-text" name="counter">{{ count }}</p></div>
+                                <div class="d-inline-block"><button type="button" class="btn btn-light" name="dec" value="{{ item.id }}" onclick="increaseFromCart({{ item.id }}, {{ count }}, {{ item.count }})">+</button></div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             {% endfor %}

@@ -20,13 +20,13 @@ class Cart:
         else:
             self.cart[item_id]['count'] += count
         self.save()
+        print(self.cart)
 
     def import_item_from_db(self, user_id):
         # user_logged_in() from django.auth.signals
         user_item_count = UserCart.objects.filter(user_id=user_id)
-        item_ids, counts = user_item_count.values('item_id', 'count')       # ? че каво
-        items = self.item_class.objects.filter(id__in=item_ids)
-        for item, count in zip(items, counts):
+        item_count = user_item_count.values_list('item_id', 'count')
+        for item, count in zip(*item_count):
             self.add_item(item, count)
         user_item_count.delete()
 
@@ -47,6 +47,9 @@ class Cart:
     def get_items(self):
         item_ids = self.cart.keys()
         return self.item_class.objects.filter(id__in=item_ids)
+
+    def get_id_count(self):
+        return {item_id: self.cart[item_id]['count'] for item_id in self.cart.keys()}
 
     def clear(self):
         del self.session[settings.CART_SESSION_ID]

@@ -28,7 +28,7 @@ function addItemFromButton(button){
 }
 
 
-function removeItemFromButton(button){
+function removeItemFromButton(button, count=null){
     removeItemFromCart(button.value);
     activateButton(button);
 }
@@ -46,4 +46,17 @@ function activateButton(button){
     button.classList.add('btn-primary');
     button.setAttribute('onclick', 'addItemFromButton(this)');
     button.innerText = 'В корзину';
+}
+
+
+function increaseFromCart(cardId, curCount, maxCount){
+    let card = document.getElementById(cardId);
+    let btnInc = card.querySelector('[name="inc"]');
+    let counter = card.querySelector('[name="counter"]');
+    if (maxCount == curCount) return;
+    if (maxCount == curCount + 1){
+        btnInc.setAttribute('disabled', '');
+    }
+    addItemToCart(btnInc.value)
+    counter.innerText = curCount + 1;
 }
