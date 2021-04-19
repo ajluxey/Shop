@@ -2,17 +2,15 @@ let baseURL = window.location.origin;
 const addToCartURL = baseURL + '/cart/add/';
 const removeFromCartURL = baseURL + '/cart/remove/';
 
-// получаем кнопку, парсим её валуе, кидаем запрос, если всё ок то меняем её на неактивную + пишем что добавлен в корзину
-function addItemToCart(button){
-    let url = addToCartURL + button.value;
-    deactivateButton(button);
+
+function addItemToCart(id){
+    let url = addToCartURL + id;
     sendRequest(url);
 }
 
 
-function removeItemFromCart(button){
-    let url = removeFromCartURL + button.value;
-    activateButton(button);
+function removeItemFromCart(id){
+    let url = removeFromCartURL + id;
     sendRequest(url)
 }
 
@@ -24,16 +22,28 @@ function sendRequest(url) {
 }
 
 
+function addItemFromButton(button){
+    addItemToCart(button.value);
+    deactivateButton(button);
+}
+
+
+function removeItemFromButton(button){
+    removeItemFromCart(button.value);
+    activateButton(button);
+}
+
+
 function deactivateButton(button){
     button.classList.remove('btn-primary');
     button.classList.add('btn-secondary');
-    button.setAttribute('onclick', 'removeItemFromCart(this)');
+    button.setAttribute('onclick', 'removeItemFromButton(this)');
     button.innerText = 'убрать из корзины';
 }
 
 function activateButton(button){
     button.classList.remove('btn-secondary');
     button.classList.add('btn-primary');
-    button.setAttribute('onclick', 'addItemFromCart(this)');
+    button.setAttribute('onclick', 'addItemFromButton(this)');
     button.innerText = 'В корзину';
 }

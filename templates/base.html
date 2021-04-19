@@ -44,9 +44,10 @@
             </div>
         </div>
     </nav>
-    {% block body %}
-    {% endblock %}
-
+    <div class="container col-8">
+        {% block body %}
+        {% endblock %}
+    </div>
     {% if messages %}
         {% for message in messages %}
             <div class="row justify-content-end">

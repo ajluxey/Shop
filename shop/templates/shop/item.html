@@ -16,9 +16,9 @@
     <p>На складе: {{ item.count }}</p>
     <h4>{{ item.desc }}</h4>
     {% if in_cart %}
-        <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromCart(this)">Убрать из корзины</button>
+        <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">Убрать из корзины</button>
     {% else %}
-        <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemToCart(this)">В корзину</button>
+        <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)">В корзину</button>
     {% endif %}
 <!--    <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemToCart(this)">В корзину</button>-->
 <!--    <a href="#" class="btn btn-primary">В корзину</a>-->
