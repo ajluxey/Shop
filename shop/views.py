@@ -4,18 +4,20 @@ from django.views.generic import View
 # Create your views here.
 from .models import Item
 from .forms import ItemForm
+from cart.cart import Cart
 
 
 class Catalog(View):
     def get(self, request):
         items = Item.objects.all()
-        return render(request, 'shop/catalog.html', context={'items': items})
+        return render(request, 'shop/catalog.html', context={'items': items, 'items_in_cart': Cart(request, Item).get_items()})
 
 
 class ItemDetail(View):
     def get(self, request, slug):
         item = get_object_or_404(Item, slug=slug)
-        return render(request, 'shop/item.html', context={'item': item})
+        in_cart = item in Cart(request, Item).get_items()
+        return render(request, 'shop/item.html', context={'item': item, 'in_cart': in_cart})
 
 
 class ItemAdd(View):

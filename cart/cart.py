@@ -12,16 +12,17 @@ class Cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add_item(self, item, count=1, update_quantity=False):
+    def add_item(self, item, count=1):
         item_id = str(item.id)
         if item_id not in self.cart:
             self.cart[item_id] = {'count': count,
                                   'price': str(item.price)}
-        if update_quantity:
+        else:
             self.cart[item_id]['count'] += count
         self.save()
 
     def import_item_from_db(self, user_id):
+        # user_logged_in() from django.auth.signals
         user_item_count = UserCart.objects.filter(user_id=user_id)
         item_ids, counts = user_item_count.values('item_id', 'count')       # ? че каво
         items = self.item_class.objects.filter(id__in=item_ids)
@@ -30,6 +31,7 @@ class Cart:
         user_item_count.delete()
 
     def export_cart_to_db(self, user_id):
+        # user_logged_out() from django.auth.signals
         for item_id in self.cart.keys():
             UserCart.objects.create(user_id=user_id, item_id=item_id, count=self.cart[item_id]['count'])
 

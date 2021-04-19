@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View
+
 from .cart import Cart
 from shop.models import Item
 # Create your views here.
@@ -10,7 +11,6 @@ class CartDetail(View):
         cart = Cart(request, Item)
         items = cart.get_items()
         total_price = cart.get_total_price()
-        print(cart.get_items())
         return render(request, 'cart/cart_detail.html', context={'items': items,
                                                                  'total_price': total_price})
 
