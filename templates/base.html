@@ -23,7 +23,7 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'catalog' %}">Каталог</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cart' %}">Корзина</a>
+                        <a class="nav-link" href="{% url 'cart_detail' %}">Корзина</a>
                     </li>
                     {% if request.user.is_authenticated %}
                         <li class="nav-item">

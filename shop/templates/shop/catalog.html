@@ -29,7 +29,7 @@
                         <p class="card-text">{{ item.desc }}</p>
                         <p class="card-text">{{ item.price }} руб.</p>
                         {% if item in items_in_cart %}
-                            <button class="btn btn-secondary" value="{{ item.id }}" onclick="addItemFromButton(this)" disabled>В корзине</button>
+                            <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">убрать из корзины</button>
                         {% else %}
                             <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)">В корзину</button>
                         {% endif %}

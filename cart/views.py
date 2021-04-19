@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View
+from django.http import JsonResponse
 
 from .cart import Cart
 from shop.models import Item
@@ -26,15 +27,26 @@ def add_to_cart(request, item_id):
     cart = Cart(request, Item)
     item = get_object_or_404(Item, id=item_id)
     cart.add_item(item)
-    return redirect('cart')
+    return redirect('cart_detail')
+
+
+def decrease_item_count(request, item_id):
+    cart = Cart(request, Item)
+    item = get_object_or_404(Item, id=item_id)
+    cart.decrease_item_count(item)
+    return redirect('cart_detail')
 
 
 def remove_from_cart(request, item_id):
     cart = Cart(request, Item)
     item = get_object_or_404(Item, id=item_id)
     cart.remove(item)
-    return redirect('cart')
+    return redirect('cart_detail')
 
 
-def cart_detail_json(request):
-    pass
+def get_cart_json(request):
+    return JsonResponse(Cart(request, Item).get_id_count())
+
+
+def get_total_price(request):
+    return JsonResponse({'total_price': Cart(request, Item).get_total_price()})
