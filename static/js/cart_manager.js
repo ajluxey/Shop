@@ -12,6 +12,7 @@ function addItemToCart(button){
 
 function removeItemFromCart(button){
     let url = removeFromCartURL + button.value;
+    activateButton(button);
     sendRequest(url)
 }
 
@@ -26,6 +27,13 @@ function sendRequest(url) {
 function deactivateButton(button){
     button.classList.remove('btn-primary');
     button.classList.add('btn-secondary');
-    button.innerText = 'В корзине';
-    button.setAttribute('disabled', '');
+    button.setAttribute('onclick', 'removeItemFromCart(this)');
+    button.innerText = 'убрать из корзины';
+}
+
+function activateButton(button){
+    button.classList.remove('btn-secondary');
+    button.classList.add('btn-primary');
+    button.setAttribute('onclick', 'addItemFromCart(this)');
+    button.innerText = 'В корзину';
 }
