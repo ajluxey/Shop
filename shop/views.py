@@ -10,13 +10,13 @@ from cart.cart import Cart
 class Catalog(View):
     def get(self, request):
         items = Item.objects.all()
-        return render(request, 'shop/catalog.html', context={'items': items, 'items_in_cart': Cart(request, Item).get_items()})
+        return render(request, 'shop/catalog.html', context={'items': items, 'items_in_cart': Cart(request).get_items()})
 
 
 class ItemDetail(View):
     def get(self, request, slug):
         item = get_object_or_404(Item, slug=slug)
-        in_cart = item in Cart(request, Item).get_items()
+        in_cart = item in Cart(request).get_items()
         return render(request, 'shop/item.html', context={'item': item, 'in_cart': in_cart})
 
 

@@ -11,7 +11,7 @@ from shop.models import Item
 
 class CartDetail(View):
     def get(self, request):
-        cart = Cart(request, Item)
+        cart = Cart(request)
         items = cart.get_items()
         # print(items.values_list('id'))
         id_count = cart.get_id_count()
@@ -26,39 +26,39 @@ class CartDetail(View):
 
 
 def add_to_cart(request, item_id):
-    cart = Cart(request, Item)
+    cart = Cart(request)
     item = get_object_or_404(Item, id=item_id)
     cart.add_item(item)
     return redirect('cart_detail')
 
 
 def decrease_item_count(request, item_id):
-    cart = Cart(request, Item)
+    cart = Cart(request)
     item = get_object_or_404(Item, id=item_id)
     cart.decrease_item_count(item)
     return redirect('cart_detail')
 
 
 def remove_from_cart(request, item_id):
-    cart = Cart(request, Item)
+    cart = Cart(request)
     item = get_object_or_404(Item, id=item_id)
     cart.remove(item)
     return redirect('cart_detail')
 
 
 def get_cart_json(request):
-    return JsonResponse(Cart(request, Item).get_id_count())
+    return JsonResponse(Cart(request).get_id_count())
 
 
 def get_total_price(request):
-    return JsonResponse({'total_price': Cart(request, Item).get_total_price()})
+    return JsonResponse({'total_price': Cart(request).get_total_price()})
 
 
 @receiver(user_logged_in)
 def extend_cart_from_db(sender, user, request, **kwargs):
-    Cart(request, Item).import_cart_from_db(user.id)
+    Cart(request).import_cart_from_db(user.id)
 
 
 @receiver(user_logged_out)
 def send_cart_to_db(sender, user, request, **kwargs):
-    Cart(request, Item).export_cart_to_db(user.id)
+    Cart(request).export_cart_to_db(user.id)
