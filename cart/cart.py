@@ -23,16 +23,15 @@ class Cart:
     def decrease_item_count(self, item):
         self.add_item(item, count=-1)
 
-    def import_item_from_db(self, user_id):
-        # user_logged_in() from django.auth.signals
+    def import_cart_from_db(self, user_id):
         user_item_count = UserCart.objects.filter(user_id=user_id)
         item_count = user_item_count.values_list('item_id', 'count')
-        for item, count in zip(*item_count):
-            self.add_item(item, count)
+        for item_id, count in item_count:
+            print(item_id, count)
+            self.add_item(self.item_class.objects.filter(id=item_id).get(), count)
         user_item_count.delete()
 
     def export_cart_to_db(self, user_id):
-        # user_logged_out() from django.auth.signals
         for item_id, count in self.cart.items():
             UserCart.objects.create(user_id=user_id, item_id=int(item_id), count=count)
 

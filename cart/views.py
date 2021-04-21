@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View
 from django.http import JsonResponse
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.dispatch import receiver
 
 from .cart import Cart
 from shop.models import Item
@@ -50,3 +52,13 @@ def get_cart_json(request):
 
 def get_total_price(request):
     return JsonResponse({'total_price': Cart(request, Item).get_total_price()})
+
+
+@receiver(user_logged_in)
+def extend_cart_from_db(sender, user, request, **kwargs):
+    Cart(request, Item).import_cart_from_db(user.id)
+
+
+@receiver(user_logged_out)
+def send_cart_to_db(sender, user, request, **kwargs):
+    Cart(request, Item).export_cart_to_db(user.id)
