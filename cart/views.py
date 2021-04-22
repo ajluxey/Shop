@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
 from django.views.generic import View
 from django.http import JsonResponse
 from django.contrib.auth.signals import user_logged_in, user_logged_out
@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 from .cart import Cart
 from shop.models import Item
+from order.models import Order, OrderItemCount
 # Create your views here.
 
 
@@ -13,16 +14,30 @@ class CartDetail(View):
     def get(self, request):
         cart = Cart(request)
         items = cart.get_items()
-        # print(items.values_list('id'))
         id_count = cart.get_id_count()
-        # print(id_count)
         total_price = cart.get_total_price()
         return render(request, 'cart/cart_detail.html', context={'items': items,
                                                                  'id_count': id_count,
                                                                  'total_price': total_price})
 
     def post(self, request):    # оформление заказа
-        pass
+        if request.user.is_authenticated:
+            order = Order.objects.create(user_id=request.user.id)
+            cart = Cart(request)
+            id_count = cart.get_id_count()
+            for item in cart.get_items():
+                count = id_count[item.id]
+                oic = OrderItemCount.objects.create(order_id=order,
+                                                    item_id=item,
+                                                    count=count)
+                print(dir(item))
+                item.count -= count
+                item.save()
+                oic.save()
+                cart.clear()
+            return redirect(order)
+        else:
+            return HttpResponse('Unauthorized', status=401)
 
 
 def add_to_cart(request, item_id):

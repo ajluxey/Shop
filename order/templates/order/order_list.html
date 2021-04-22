@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Заказы
+{% endblock %}
+
+{% block body %}
+    <h3>Заказы</h3>
+    {% if orders %}
+        {% for order in orders %}
+            <a href="{{ order.get_absolute_url }}">{{ order.slug }}</a>
+        {% endfor %}
+    {% else %}
+        <p>У вас пока нет заказов</p>
+    {% endif %}
+{% endblock %}

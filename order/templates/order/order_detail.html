@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Заказ {{ order.slug }}
+{% endblock %}
+
+{% block body %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <h3>Заказ {{ order.slug }}</h3>
+        <div class="card mb-3" style="width: 18rem;">
+            {% for item in items %}
+                <div class="card-body">
+                    <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
+                    <img src="..." class="card-img-top" alt="...">
+                    <p class="card-text">{{ item.desc }}</p>
+                    {% for item_id, count in id_count.items %}
+                        {% if item_id == item.id %}
+                            <p class="card-text">{{ count }} шт.</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Отменить заказ</button>
+    </form>
+{% endblock %}

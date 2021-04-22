@@ -23,7 +23,7 @@
                         <p class="card-text">{{ item.desc }}</p>
                         <p class="card-text">{{ item.price }} руб.</p>
                         {% for item_id, count in id_count.items %}
-                            {% if item_id == item.id|stringformat:"i" %}
+                            {% if item_id == item.id %}
                                 <p class="card-text">Количество</p>
                                 <div class="d-inline-block"><button type="button" class="btn btn-light" name="dec" onclick="decreaseFromCard({{ item.id }})">-</button></div>
                                 <div class="d-inline-block"><p class="card-text" name="counter">{{ count }}</p></div>
@@ -34,7 +34,12 @@
                 </div>
             {% endfor %}
             <h3 id="total_price">Итоговая цена {{ total_price }} руб.</h3>
-            <button type="submit" class="btn btn-primary">Оформить заказ</button>
+            {% if request.user.is_authenticated %}
+                <button type="submit" class="btn btn-primary">Оформить заказ</button>
+            {% else %}
+                <h4>Войдите чтобы оформить заказ</h4>
+                <a href="{% url 'login' %}">Вход</a>
+            {% endif %}
         {% else %}
             <p>Корзина пока пуста</p>
         {% endif %}

@@ -52,7 +52,7 @@ class Cart:
         return self.item_class.objects.filter(id__in=item_ids)
 
     def get_id_count(self):
-        return self.cart
+        return {int(item_id): count for item_id, count in self.cart.items()}
 
     def clear(self):
         del self.session[settings.CART_SESSION_ID]
