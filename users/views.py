@@ -23,6 +23,7 @@ class LogoutUser(LogoutView):
     next_page = reverse_lazy('catalog')
 
 
+# TODO: если уже автоизован, то запретить заходить на вход
 class RegisterUser(CreateView):
     model = CustomUser
     template_name = 'users/registration.html'

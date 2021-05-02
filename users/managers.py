@@ -1,5 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
 
 
 class CustomUserManager(BaseUserManager):
@@ -13,6 +15,8 @@ class CustomUserManager(BaseUserManager):
                           phone=phone,
                           **extra_fields)
         user.set_password(password)
+        # client_group = Group.objects.get(name='Client')
+        # user.groups.set(client_group)
         user.save()
         return user
 

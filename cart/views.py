@@ -30,7 +30,6 @@ class CartDetail(View):
                 oic = OrderItemCount.objects.create(order_id=order,
                                                     item_id=item,
                                                     count=count)
-                print(dir(item))
                 item.count -= count
                 item.save()
                 oic.save()

@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, Authenti
 from .models import CustomUser
 
 from django import forms
+from django.contrib.auth.models import Group
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -14,6 +15,16 @@ class CustomUserCreationForm(UserCreationForm):
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+    def save(self, commit=True):
+        assert commit, 'unexpected commit state'
+
+        user = super().save(commit=commit)
+        client_group = Group.objects.get(name='Client')
+        user.groups.set([client_group])
+        user.save()
+
+        return user
 
 
 class CustomUserChangeForm(UserChangeForm):
