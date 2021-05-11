@@ -6,11 +6,13 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 # Create your views here.
-from .models import Item
-from .forms import ItemForm
+from .models import Item, Brand, Category, Country
+from .forms import ItemForm, BrandForm, CategoryForm, CountryForm
 from cart.cart import Cart
+from .utils import ObjectAddMixin, ObjectDeleteMixin, ObjectUpdateMixin, ObjectsAllMixin
 
 
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_item')), name='dispatch')
 class Catalog(View):
     def get(self, request):
         items = Item.objects.all()
@@ -65,3 +67,106 @@ class ItemDelete(View):
         item = get_object_or_404(Item, slug=slug)
         item.delete()
         return redirect(reverse('catalog'))
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_brand')), name='dispatch')
+class BrandsAll(ObjectsAllMixin, View):
+    model = Brand
+    template = 'shop/brand/brands_list.html'
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_brand')), name='dispatch')
+class BrandDetail(View):
+    def get(self, request, slug):
+        brand = get_object_or_404(Brand, slug=slug)
+        items = Item.objects.filter(brand=brand)
+        return render(request, 'shop/brand/brand.html', context={'brand': brand, 'items': items, 'items_in_cart': Cart(request).get_items()})
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_brand')), name='dispatch')
+class BrandAdd(ObjectAddMixin, View):
+    model = Brand
+    template = 'shop/brand/brand_add.html'
+    form = BrandForm
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.change_brand')), name='dispatch')
+class BrandUpdate(ObjectUpdateMixin, View):
+    model = Brand
+    template = 'shop/brand/brand_update.html'
+    form = BrandForm
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.delete_brand')), name='dispatch')
+class BrandDelete(ObjectDeleteMixin, View):
+    model = Brand
+    template = 'shop/brand/brand_delete.html'
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_category')), name='dispatch')
+class CategoriesAll(ObjectsAllMixin, View):
+    model = Category
+    template = 'shop/category/categories_list.html'
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_category')), name='dispatch')
+class CategoryDetail(View):
+    def get(self, request, slug):
+        category = get_object_or_404(Category, slug=slug)
+        print(category)
+        items = Item.objects.filter(category=category)
+        return render(request, 'shop/category/category.html', context={'category': category, 'items': items, 'items_in_cart': Cart(request).get_items()})
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_category')), name='dispatch')
+class CategoryAdd(ObjectAddMixin, View):
+    model = Category
+    template = 'shop/category/category_add.html'
+    form = CategoryForm
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.change_category')), name='dispatch')
+class CategoryUpdate(ObjectUpdateMixin, View):
+    model = Category
+    template = 'shop/category/category_update.html'
+    form = CategoryForm
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.delete_category')), name='dispatch')
+class CategoryDelete(ObjectDeleteMixin, View):
+    model = Category
+    template = 'shop/category/category_delete.html'
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_country')), name='dispatch')
+class CountriesAll(ObjectsAllMixin, View):
+    model = Country
+    template = 'shop/country/countries_list.html'
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_country')), name='dispatch')
+class CountryDetail(View):
+    def get(self, request, slug):
+        country = get_object_or_404(Country, slug=slug)
+        items = Item.objects.filter(country=country)
+        return render(request, 'shop/country/country.html', context={'country': country, 'items': items, 'items_in_cart': Cart(request).get_items()})
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_country')), name='dispatch')
+class CountryAdd(ObjectAddMixin, View):
+    model = Country
+    template = 'shop/country/country_add.html'
+    form = CountryForm
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.change_country')), name='dispatch')
+class CountryUpdate(ObjectUpdateMixin, View):
+    model = Country
+    template = 'shop/country/country_update.html'
+    form = CountryForm
+
+
+@method_decorator(user_passes_test(lambda u: u.has_perm('shop.delete_country')), name='dispatch')
+class CountryDelete(ObjectDeleteMixin, View):
+    model = Country
+    template = 'shop/country/country_delete.html'

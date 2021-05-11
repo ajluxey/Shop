@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Обновление товара
+Обновление страны
 {% endblock %}
 
 {% block body %}
 <form action="" method="post">
     {% csrf_token %}
-    <p>Изменение товара</p>
+    <p>Изменение страны</p>
     {% for field in form %}
         <div class="mb-3">
             {% if field.errors %}

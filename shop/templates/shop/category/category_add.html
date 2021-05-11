@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Обновление товара
+Добавление категории
 {% endblock %}
 
 {% block body %}
 <form action="" method="post">
     {% csrf_token %}
-    <p>Изменение товара</p>
+    <h3>Добавление категории</h3>
     {% for field in form %}
         <div class="mb-3">
             {% if field.errors %}
@@ -20,6 +20,6 @@
             {{ field }}
         </div>
     {% endfor %}
-    <button type="submit" class="btn btn-primary">Применить</button>
+    <button type="submit" class="btn btn-primary">Добавить</button>
 </form>
 {% endblock %}

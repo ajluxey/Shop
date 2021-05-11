@@ -7,7 +7,7 @@
 {% block body %}
 <form action="" method="post">
     {% csrf_token %}
-    <p>Добавление товара</p>
+    <h3>Добавление товара</h3>
     {% for field in form %}
         <div class="mb-3">
             {% if field.errors %}
@@ -20,6 +20,6 @@
             {{ field }}
         </div>
     {% endfor %}
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Добавить</button>
 </form>
 {% endblock %}

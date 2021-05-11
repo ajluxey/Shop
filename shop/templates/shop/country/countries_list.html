@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Страны
+{% endblock %}
+
+{% block body %}
+    <h3>Страны</h3>
+    {% if objects %}
+        {% for obj in objects %}
+            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+        {% endfor %}
+    {% else %}
+        <p>У нас нет сведений по странам</p>
+    {% endif %}
+{% endblock %}

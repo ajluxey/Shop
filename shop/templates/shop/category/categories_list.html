@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Категории
+{% endblock %}
+
+{% block body %}
+    <h3>Категории</h3>
+    {% if objects %}
+        {% for obj in objects %}
+            <a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a>
+        {% endfor %}
+    {% else %}
+        <p>У нас нет категорий</p>
+    {% endif %}
+{% endblock %}
