@@ -16,7 +16,8 @@ class LoginUser(LoginView):
     success_message = 'Welcome to the CUM zone'
 
     def get_success_url(self):
-        return self.success_url
+        url = self.get_redirect_url()
+        return self.success_url if not url else url
 
 
 class LogoutUser(LogoutView):
