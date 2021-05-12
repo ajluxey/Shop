@@ -15,8 +15,6 @@ class CustomUserManager(BaseUserManager):
                           phone=phone,
                           **extra_fields)
         user.set_password(password)
-        # client_group = Group.objects.get(name='Client')
-        # user.groups.set(client_group)
         user.save()
         return user
 

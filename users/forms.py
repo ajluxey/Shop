@@ -17,13 +17,11 @@ class CustomUserCreationForm(UserCreationForm):
         }
 
     def save(self, commit=True):
-        assert commit, 'unexpected commit state'
-
         user = super().save(commit=commit)
-        client_group = Group.objects.get(name='Client')
-        user.groups.set([client_group])
-        user.save()
-
+        if commit:
+            client_group = Group.objects.get(name='Client')
+            user.groups.set([client_group])
+            user.save()
         return user
 
 

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load users_tags %}
 
 {% block title %}
     Магазин
@@ -50,11 +51,13 @@
         {% endfor %}
         </div>
     </div>
-    <div class="container">
-        <div class="card mb-3" style="width: 18rem;">
-            <div class="card-body">
-                <a href="{% url 'item_add' %}" class="card-title h5">Добавить Товар</a>
+    {% if request.user|in_group:"Manager" or request.user.is_superuser %}
+        <div class="container">
+            <div class="card mb-3" style="width: 18rem;">
+                <div class="card-body">
+                    <a href="{% url 'item_add' %}" class="card-title h5">Добавить Товар</a>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
