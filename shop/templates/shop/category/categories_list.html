@@ -14,3 +14,8 @@
         <p>У нас нет категорий</p>
     {% endif %}
 {% endblock %}
+
+{% block manager_panel %}
+    <a href="{% url 'category_add' %}" class="btn btn-light">Добавить</a>
+{% endblock %}
+

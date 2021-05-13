@@ -13,21 +13,21 @@
 {% block body %}
     <h3>Товары:</h3>
     <div class="container">
-        <div class="row row-cols-3 g-4">
+        <div class="row">
         {% for item in items %}
             {% if forloop.counter0|divisibleby:3 %}
                 {% if not forloop.first %}
                     </div>
-                    <div class="row row-cols-3 g-4">
+                    <div class="row">
                 {% endif %}
             {% endif %}
-            <div class="col-lg-4 col-sm-6 col-xs-12 d-flex align-items-stretch mb-4">
-                <div class="card">
+            <div class="col">
+                <div class="card mb-3" style="width: 18rem;">
                     <div class="card-body">
                         {% if item.img %}
                             <img src="{{ item.img.url }}" class="card-img-top" alt="...">
                         {% else %}
-                            <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
+                            <img src="{% static 'media/images/no_img.png' %}" class="card-img-top" alt="...">
                         {% endif %}
                         <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
                         <p class="card-text text-truncate">{{ item.desc }}</p>

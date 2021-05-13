@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     Заказ {{ order.slug }}
@@ -11,9 +12,13 @@
         <div class="card mb-3" style="width: 18rem;">
             {% for item in items %}
                 <div class="card-body">
+                    {% if item.img %}
+                        <img src="{{ item.img.url }}" class="card-img-top" alt="...">
+                    {% else %}
+                        <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
+                    {% endif %}
                     <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
-                    <img src="..." class="card-img-top" alt="...">
-                    <p class="card-text">{{ item.desc }}</p>
+                    <p class="card-text text-truncate">{{ item.desc }}</p>
                     {% for item_id, count in id_count.items %}
                         {% if item_id == item.id %}
                             <p class="card-text">{{ count }} шт.</p>

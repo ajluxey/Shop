@@ -26,10 +26,13 @@
                 <div class="col">
                     <div class="card mb-3" style="width: 18rem;">
                         <div class="card-body">
+                            {% if item.img %}
+                                <img src="{{ item.img.url }}" class="card-img-top" alt="...">
+                            {% else %}
+                                <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
+                            {% endif %}
                             <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
-                            <!--<h5 class="card-title">{{ item.name }}</h5>-->
-                            <img src="..." class="card-img-top" alt="...">
-                            <p class="card-text">{{ item.desc }}</p>
+                            <p class="card-text text-truncate">{{ item.desc }}</p>
                             <p class="card-text">{{ item.price }} руб.</p>
                             {% if item.count > 0 %}
                                 <p class="card-text">На складе {{ item.count }} шт.</p>
@@ -56,3 +59,9 @@
         <h5>У нас пока нет товаров данного производителя</h5>
     {% endif %}
 {% endblock %}
+
+{% block manager_panel %}
+    <a href="{% url 'brand_update' slug=brand.slug %}" class="btn btn-light">Редактировать</a>
+    <a href="{% url 'brand_delete' slug=brand.slug %}" class="btn btn-danger">Удалить</a>
+{% endblock %}
+

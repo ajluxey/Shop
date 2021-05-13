@@ -74,7 +74,7 @@ class Item(models.Model):
     desc = models.CharField(max_length=512, db_index=True, verbose_name='Описание')
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Цена')
     count = models.PositiveSmallIntegerField(verbose_name='Количество')
-    img = models.ImageField(upload_to='images', blank=True, verbose_name='Фото товара')
+    img = models.ImageField(upload_to='images/items', blank=True, verbose_name='Фото товара')
     # оценка товара
     # s_of_r8 = models.IntegerField()
     # c_of_r8 = models.IntegerField()

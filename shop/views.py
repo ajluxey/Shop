@@ -32,7 +32,7 @@ class ItemAdd(View):
         return render(request, 'shop/item_add.html', context={'form': form})
 
     def post(self, request):
-        bound_form = ItemForm(request.POST)
+        bound_form = ItemForm(request.POST, request.FILES)
         if bound_form.is_valid():
             item = bound_form.save()
             return redirect(item)

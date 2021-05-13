@@ -14,3 +14,7 @@
         <p>У нас нет сведений по производителям</p>
     {% endif %}
 {% endblock %}
+
+{% block manager_panel %}
+    <a href="{% url 'brand_add' %}" class="btn btn-light">Добавить</a>
+{% endblock %}
