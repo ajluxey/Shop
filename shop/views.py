@@ -48,7 +48,7 @@ class ItemUpdate(View):
 
     def post(self, request, slug):
         item = get_object_or_404(Item, slug=slug)
-        bound_form = ItemForm(request.POST, instance=item)
+        bound_form = ItemForm(request.POST, request.FILES, instance=item)
         if bound_form.is_valid():
             new_item = bound_form.save()
             return redirect(new_item)

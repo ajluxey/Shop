@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <h3>Добавление товара</h3>
     {% for field in form %}

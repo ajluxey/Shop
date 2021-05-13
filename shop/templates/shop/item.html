@@ -11,7 +11,11 @@
 
 {% block body %}
     <h3>{{ item.name }}</h3>
-    <img src="..." class="card-img-top" alt="...">
+    {% if item.img %}
+        <img src="{{ item.img.url }}" class="card-img-top" alt="...">
+    {% else %}
+        <img src="{% static 'media/images/no_img.png' %}" class="card-img-top" alt="...">
+    {% endif %}
     <p>Цена: {{ item.price }} руб.</p>
     <p>На складе: {{ item.count }}</p>
     <h4>{{ item.desc }}</h4>

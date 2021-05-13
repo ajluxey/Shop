@@ -5,7 +5,7 @@ from .models import Item, Brand, Country, Category
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ['name', 'desc', 'price', 'count', 'brand', 'country', 'category']
+        fields = ['name', 'desc', 'price', 'count', 'brand', 'country', 'category', 'img']
 
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -14,7 +14,8 @@ class ItemForm(forms.ModelForm):
             'count': forms.NumberInput(attrs={'class': 'form-control'}),
             'brand': forms.Select(attrs={'class': 'form-control'}),
             'country': forms.Select(attrs={'class': 'form-control'}),
-            'category': forms.SelectMultiple(attrs={'class': 'form-control'})
+            'category': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            # 'img': forms.ImageField(attrs={'class': 'form-control'})
         }
 
 

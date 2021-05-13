@@ -24,8 +24,12 @@
             <div class="col">
                 <div class="card mb-3" style="width: 18rem;">
                     <div class="card-body">
+                        {% if item.img %}
+                            <img src="{{ item.img.url }}" class="card-img-top" alt="...">
+                        {% else %}
+                            <img src="{% static 'media/images/no_img.png' %}" class="card-img-top" alt="...">
+                        {% endif %}
                         <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
-                        <img src="..." class="card-img-top" alt="...">
                         <p class="card-text">{{ item.desc }}</p>
                         <p class="card-text">{{ item.price }} руб.</p>
                         {% if item.count > 0 %}

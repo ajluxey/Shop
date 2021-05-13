@@ -8,9 +8,9 @@ from .utils import translit
 
 # Create your models here.
 class Brand(models.Model):
-    name = models.CharField(max_length=128, unique=True)    #, default='Без названия')
-    desc = models.CharField(max_length=512, db_index=True)  #, default='Нет описания')
-    slug = models.SlugField(max_length=150, unique=True)    #, default='-')
+    name = models.CharField(max_length=128, unique=True, verbose_name='Название')
+    desc = models.CharField(max_length=512, db_index=True, verbose_name='Описание')
+    slug = models.SlugField(max_length=150, unique=True)
 
     def get_absolute_url(self):
         return reverse('brand_detail', kwargs={'slug': self.slug})
@@ -29,9 +29,9 @@ class Brand(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=128, unique=True)    #, default='Без названия')
-    desc = models.CharField(max_length=512, db_index=True)  #, default='Нет описания')
-    slug = models.SlugField(max_length=150, unique=True)    #, default='-')
+    name = models.CharField(max_length=128, unique=True, verbose_name='Название')
+    desc = models.CharField(max_length=512, db_index=True, verbose_name='Описание')
+    slug = models.SlugField(max_length=150, unique=True)
 
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
@@ -50,8 +50,8 @@ class Category(models.Model):
 
 
 class Country(models.Model):
-    name = models.CharField(max_length=128, unique=True)    #, default='Без названия')
-    slug = models.SlugField(max_length=150, unique=True)    #, default='-')
+    name = models.CharField(max_length=128, unique=True, verbose_name='Название')
+    slug = models.SlugField(max_length=150, unique=True)
 
     def get_absolute_url(self):
         return reverse('country_detail', kwargs={'slug': self.slug})
@@ -70,17 +70,17 @@ class Country(models.Model):
 
 
 class Item(models.Model):
-    name = models.CharField(max_length=128, unique=True, db_index=True)
-    desc = models.CharField(max_length=512, db_index=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    count = models.PositiveSmallIntegerField()
-    # img = models.ImageField(upload_to=, blank=True)
+    name = models.CharField(max_length=128, unique=True, db_index=True, verbose_name='Название')
+    desc = models.CharField(max_length=512, db_index=True, verbose_name='Описание')
+    price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Цена')
+    count = models.PositiveSmallIntegerField(verbose_name='Количество')
+    img = models.ImageField(upload_to='images', blank=True, verbose_name='Фото товара')
     # оценка товара
     # s_of_r8 = models.IntegerField()
     # c_of_r8 = models.IntegerField()
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='items', blank=True)
-    category = models.ManyToManyField('Category', related_name='items', blank=True)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='items', blank=True)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='items', blank=True, verbose_name='Производитель')
+    category = models.ManyToManyField('Category', related_name='items', blank=True, verbose_name='Категории')
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='items', blank=True, verbose_name='Страна производитель')
     slug = models.SlugField(max_length=150, unique=True)
 
     def get_absolute_url(self):
