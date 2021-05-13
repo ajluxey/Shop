@@ -1,0 +1,13 @@
+.manager-panel {
+    padding: 5px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    position: fixed;
+    right: 50px;
+    bottom: 30px;
+    opacity: 0.3;
+}
+
+.manager-panel:hover {
+    opacity: 1;
+}

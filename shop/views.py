@@ -12,14 +12,12 @@ from cart.cart import Cart
 from .utils import ObjectAddMixin, ObjectDeleteMixin, ObjectUpdateMixin, ObjectsAllMixin
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_item')), name='dispatch')
 class Catalog(View):
     def get(self, request):
         items = Item.objects.all()
         return render(request, 'shop/catalog.html', context={'items': items, 'items_in_cart': Cart(request).get_items()})
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_item')), name='dispatch')
 class ItemDetail(View):
     def get(self, request, slug):
         item = get_object_or_404(Item, slug=slug)
@@ -37,7 +35,7 @@ class ItemAdd(View):
         bound_form = ItemForm(request.POST)
         if bound_form.is_valid():
             item = bound_form.save()
-            redirect(item)
+            return redirect(item)
         return render(request, 'shop/item_add.html', context={'form': bound_form})
 
 
@@ -53,7 +51,7 @@ class ItemUpdate(View):
         bound_form = ItemForm(request.POST, instance=item)
         if bound_form.is_valid():
             new_item = bound_form.save()
-            redirect(new_item)
+            return redirect(new_item)
         return render(request, 'shop/item_update.html', context={'form': bound_form})
 
 

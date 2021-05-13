@@ -20,6 +20,9 @@
     {% else %}
         <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)">В корзину</button>
     {% endif %}
-<!--    <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemToCart(this)">В корзину</button>-->
-<!--    <a href="#" class="btn btn-primary">В корзину</a>-->
+{% endblock %}
+
+{% block manager_panel %}
+    <a href="{% url 'item_update' slug=item.slug %}" class="btn btn-light">Редактировать</a>
+    <a href="{% url 'item_delete' slug=item.slug %}" class="btn btn-danger">Удалить</a>
 {% endblock %}

@@ -24,7 +24,7 @@ class ObjectAddMixin:
         bound_form = self.form(request.POST)
         if bound_form.is_valid():
             brand = bound_form.save()
-            redirect(brand)
+            return redirect(brand)
         return render(request, self.template, context={'form': bound_form})
 
 
@@ -43,7 +43,7 @@ class ObjectUpdateMixin:
         bound_form = self.form(request.POST, instance=obj)
         if bound_form.is_valid():
             new_obj = bound_form.save()
-            redirect(new_obj)
+            return redirect(new_obj)
         return render(request, self.template, context={'form': bound_form})
 
 

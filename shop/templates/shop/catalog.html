@@ -25,7 +25,6 @@
                 <div class="card mb-3" style="width: 18rem;">
                     <div class="card-body">
                         <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
-                        <!--<h5 class="card-title">{{ item.name }}</h5>-->
                         <img src="..." class="card-img-top" alt="...">
                         <p class="card-text">{{ item.desc }}</p>
                         <p class="card-text">{{ item.price }} руб.</p>
@@ -44,7 +43,6 @@
                                 <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)" disabled>В корзину</button>
                             {% endif %}
                         {% endif %}
-<!--                            <a href="#" class="btn btn-primary">В корзину {{item.id}}</a>-->
                     </div>
                 </div>
             </div>

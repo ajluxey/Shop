@@ -3,6 +3,8 @@ from django.views.generic import View
 from django.http import JsonResponse
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import user_passes_test
 
 from .cart import Cart
 from shop.models import Item
