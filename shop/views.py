@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.shortcuts import render, get_object_or_404, redirect, reverse, HttpResponse
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
@@ -162,3 +162,15 @@ class CountryUpdate(ObjectUpdateMixin, View):
 class CountryDelete(ObjectDeleteMixin, View):
     model = Country
     template = 'shop/country/country_delete.html'
+
+
+class FilteredCatalog(View):
+    def get(self, request, filter):
+        model_by_name = {'category': Category,
+                         'country': Country,
+                         'brand': Brand}
+        filters = {name: get_object_or_404(model_by_name[name], slug=slug) for name, slug in [filt.split('=') for filt in filter.split('&')]}
+        items = Item.objects.filter(**filters).all()
+        return render(request, 'shop/catalog.html',
+                      context={'items': items,
+                               'items_in_cart': Cart(request).get_items()})
