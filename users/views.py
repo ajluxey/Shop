@@ -4,14 +4,14 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 
-from .forms import CustomUser, CustomUserCreationForm
+from .forms import CustomUser, CustomUserCreationForm, CustomUserAuthForm
 
 # Create your views here.
 
 
 class LoginUser(LoginView):
     template_name = 'users/login.html'
-    form_class = AuthenticationForm
+    form_class = CustomUserAuthForm
     success_url = reverse_lazy('catalog')
     success_message = 'Welcome to the CUM zone'
 
