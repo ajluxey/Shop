@@ -13,48 +13,7 @@
     <h3>{{ brand.name }}</h3>
     <h4>{{ brand.desc }}</h4>
     {% if items %}
-        <h3>Товары:</h3>
-        <div class="container">
-            <div class="row">
-            {% for item in items %}
-                {% if forloop.counter0|divisibleby:3 %}
-                    {% if not forloop.first %}
-                        </div>
-                        <div class="row">
-                    {% endif %}
-                {% endif %}
-                <div class="col">
-                    <div class="card mb-3" style="width: 18rem;">
-                        <div class="card-body">
-                            {% if item.img %}
-                                <img src="{{ item.img.url }}" class="card-img-top" alt="...">
-                            {% else %}
-                                <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
-                            {% endif %}
-                            <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
-                            <p class="card-text text-truncate">{{ item.desc }}</p>
-                            <p class="card-text">{{ item.price }} руб.</p>
-                            {% if item.count > 0 %}
-                                <p class="card-text">На складе {{ item.count }} шт.</p>
-                                {% if item in items_in_cart %}
-                                    <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">убрать из корзины</button>
-                                {% else %}
-                                    <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)">В корзину</button>
-                                {% endif %}
-                            {% else %}
-                                <p class="card-text">Нет на складе</p>
-                                {% if item in items_in_cart %}
-                                    <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">убрать из корзины</button>
-                                {% else %}
-                                    <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)" disabled>В корзину</button>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-            </div>
-        </div>
+        {% include 'catalog_form.html' %}
     {% else %}
         <h5>У нас пока нет товаров данного производителя</h5>
     {% endif %}

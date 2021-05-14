@@ -9,24 +9,30 @@
     <form action="" method="post">
         {% csrf_token %}
         <h3>Заказ {{ order.slug }}</h3>
-        <div class="card mb-3" style="width: 18rem;">
-            {% for item in items %}
-                <div class="card-body">
-                    {% if item.img %}
-                        <img src="{{ item.img.url }}" class="card-img-top" alt="...">
-                    {% else %}
-                        <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
-                    {% endif %}
-                    <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
-                    <p class="card-text text-truncate">{{ item.desc }}</p>
-                    {% for item_id, count in id_count.items %}
-                        {% if item_id == item.id %}
-                            <p class="card-text">{{ count }} шт.</p>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endfor %}
+        <div class="container">
+            <div class="row">
+                {% for item in items %}
+                    <div class="col-lg-4 col-sm-6 col-xs-12 d-flex align-items-stretch mb-4">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                {% if item.img %}
+                                    <img src="{{ item.img.url }}" class="card-img-top" alt="...">
+                                {% else %}
+                                    <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
+                                {% endif %}
+                                <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
+                                <p class="card-text text-truncate">{{ item.desc }}</p>
+                                {% for item_id, count in id_count.items %}
+                                    {% if item_id == item.id %}
+                                        <p class="card-text">{{ count }} шт.</p>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">Отменить заказ</button>
         </div>
-        <button type="submit" class="btn btn-primary">Отменить заказ</button>
     </form>
 {% endblock %}

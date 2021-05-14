@@ -14,28 +14,34 @@
     <form action="" id="form" method="post">
         {% csrf_token %}
         {% if items %}
-            {% for item in items %}
-                <div class="card mb-3" style="width: 18rem;" id="{{item.id}}">
-                    <div class="card-body">
-                        {% if item.img %}
-                            <img src="{{ item.img.url }}" class="card-img-top" alt="...">
-                        {% else %}
-                            <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
-                        {% endif %}
-                        <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
-                        <p class="card-text text-truncate">{{ item.desc }}</p>
-                        <p class="card-text">{{ item.price }} руб.</p>
-                        {% for item_id, count in id_count.items %}
-                            {% if item_id == item.id %}
-                                <p class="card-text">Количество</p>
-                                <div class="d-inline-block"><button type="button" class="btn btn-light" name="dec" onclick="decreaseFromCard({{ item.id }})">-</button></div>
-                                <div class="d-inline-block"><p class="card-text" name="counter">{{ count }}</p></div>
-                                <div class="d-inline-block"><button type="button" class="btn btn-light" name="inc" onclick="increaseFromCard({{ item.id }}, {{ item.count }})">+</button></div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+            <div class="container">
+                <div class="row">
+                    {% for item in items %}
+                        <div class="col-lg-4 col-sm-6 col-xs-12 d-flex align-items-stretch mb-4">
+                            <div class="card" id="{{item.id}}">
+                                <div class="card-body">
+                                    {% if item.img %}
+                                        <img src="{{ item.img.url }}" class="card-img-top" alt="...">
+                                    {% else %}
+                                        <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
+                                    {% endif %}
+                                    <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
+                                    <p class="card-text text-truncate">{{ item.desc }}</p>
+                                    <p class="card-text">{{ item.price }} руб.</p>
+                                    {% for item_id, count in id_count.items %}
+                                        {% if item_id == item.id %}
+                                            <p class="card-text">Количество</p>
+                                            <div class="d-inline-block"><button type="button" class="btn btn-light" name="dec" onclick="decreaseFromCard({{ item.id }})">-</button></div>
+                                            <div class="d-inline-block"><p class="card-text" name="counter">{{ count }}</p></div>
+                                            <div class="d-inline-block"><button type="button" class="btn btn-light" name="inc" onclick="increaseFromCard({{ item.id }}, {{ item.count }})">+</button></div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
             <h3 id="total_price">Итоговая цена {{ total_price }} руб.</h3>
             {% if request.user.is_authenticated %}
                 <button type="submit" class="btn btn-primary">Оформить заказ</button>
