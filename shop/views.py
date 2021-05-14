@@ -67,13 +67,11 @@ class ItemDelete(View):
         return redirect(reverse('catalog'))
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_brand')), name='dispatch')
 class BrandsAll(ObjectsAllMixin, View):
     model = Brand
     template = 'shop/brand/brands_list.html'
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_brand')), name='dispatch')
 class BrandDetail(View):
     def get(self, request, slug):
         brand = get_object_or_404(Brand, slug=slug)
@@ -101,13 +99,11 @@ class BrandDelete(ObjectDeleteMixin, View):
     template = 'shop/brand/brand_delete.html'
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_category')), name='dispatch')
 class CategoriesAll(ObjectsAllMixin, View):
     model = Category
     template = 'shop/category/categories_list.html'
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_category')), name='dispatch')
 class CategoryDetail(View):
     def get(self, request, slug):
         category = get_object_or_404(Category, slug=slug)
@@ -136,13 +132,11 @@ class CategoryDelete(ObjectDeleteMixin, View):
     template = 'shop/category/category_delete.html'
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_country')), name='dispatch')
 class CountriesAll(ObjectsAllMixin, View):
     model = Country
     template = 'shop/country/countries_list.html'
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.view_country')), name='dispatch')
 class CountryDetail(View):
     def get(self, request, slug):
         country = get_object_or_404(Country, slug=slug)
