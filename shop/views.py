@@ -172,8 +172,6 @@ class FilteredCatalog(View):
         model_by_name = {'category': Category,
                          'country': Country,
                          'brand': Brand}
-        # TODO: можно делать по одному фильтру, но нужно чтобы можно было больше
-        # filters = {name: get_object_or_404(model_by_name[name], slug=slug) for name, slug in [filt.split('=') for filt in filter.split('&')]}
 
         filters = {}
         for name, slug in [filt.split('=') for filt in filter.split('&')]:
