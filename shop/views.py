@@ -3,6 +3,7 @@ from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 
 
 # Create your views here.
@@ -10,6 +11,9 @@ from .models import Item, Brand, Category, Country
 from .forms import ItemForm, BrandForm, CategoryForm, CountryForm
 from cart.cart import Cart
 from .utils import ObjectAddMixin, ObjectDeleteMixin, ObjectUpdateMixin, ObjectsAllMixin
+
+
+# TODO: сделать отображение страны, категорий и производителя
 
 
 class Catalog(View):
@@ -107,7 +111,6 @@ class CategoriesAll(ObjectsAllMixin, View):
 class CategoryDetail(View):
     def get(self, request, slug):
         category = get_object_or_404(Category, slug=slug)
-        print(category)
         items = Item.objects.filter(category=category)
         return render(request, 'shop/category/category.html', context={'category': category, 'items': items, 'items_in_cart': Cart(request).get_items()})
 
@@ -169,8 +172,25 @@ class FilteredCatalog(View):
         model_by_name = {'category': Category,
                          'country': Country,
                          'brand': Brand}
-        filters = {name: get_object_or_404(model_by_name[name], slug=slug) for name, slug in [filt.split('=') for filt in filter.split('&')]}
-        items = Item.objects.filter(**filters).all()
+        # TODO: можно делать по одному фильтру, но нужно чтобы можно было больше
+        # filters = {name: get_object_or_404(model_by_name[name], slug=slug) for name, slug in [filt.split('=') for filt in filter.split('&')]}
+
+        filters = {}
+        for name, slug in [filt.split('=') for filt in filter.split('&')]:
+            obj = get_object_or_404(model_by_name[name], slug=slug)
+            if name in filters:
+                filters[name] |= Q(**{name: obj})
+            else:
+                filters[name] = Q(**{name: obj})
+
+        tmp = list(filters.values())
+        tmp, other_filters = tmp[0], tmp[1:]
+        if len(filters) != 1:
+            for filt in other_filters:
+                tmp &= filt
+        filters = tmp
+
+        items = Item.objects.filter(filters).all()
         return render(request, 'shop/catalog.html',
                       context={'items': items,
                                'items_in_cart': Cart(request).get_items()})
