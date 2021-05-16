@@ -8,9 +8,12 @@ from django.db.models import Q
 
 # Create your views here.
 from .models import Item, Brand, Category, Country
-from .forms import ItemForm, BrandForm, CategoryForm, CountryForm
+from .forms import ItemForm, BrandForm, CategoryForm, CountryForm, FilterForm
 from cart.cart import Cart
 from .utils import ObjectAddMixin, ObjectDeleteMixin, ObjectUpdateMixin, ObjectsAllMixin
+
+from functools import reduce
+from operator import iand
 
 
 # TODO: сделать отображение страны, категорий и производителя
@@ -18,8 +21,25 @@ from .utils import ObjectAddMixin, ObjectDeleteMixin, ObjectUpdateMixin, Objects
 
 class Catalog(View):
     def get(self, request):
+        form = FilterForm()
         items = Item.objects.all()
-        return render(request, 'shop/catalog.html', context={'items': items, 'items_in_cart': Cart(request).get_items()})
+        return render(request, 'shop/catalog.html',
+                      context={'items': items,
+                               'items_in_cart': Cart(request).get_items(),
+                               'form': form})
+
+    def post(self, request):
+        form = FilterForm(request.POST)
+        if not form.changed_data:
+            return redirect('catalog')
+
+        if form.is_valid():
+            return redirect(reverse('catalog_with_filter') + '?' +  filter_str_by_form(form))
+        items = Item.objects.all()
+        return render(request, 'shop/catalog.html',
+                      context={'items': items,
+                               'items_in_cart': Cart(request).get_items(),
+                               'form': form})
 
 
 class ItemDetail(View):
@@ -168,27 +188,55 @@ class CountryDelete(ObjectDeleteMixin, View):
 
 
 class FilteredCatalog(View):
-    def get(self, request, filter):
+    def get(self, request):
         model_by_name = {'category': Category,
                          'country': Country,
                          'brand': Brand}
 
         filters = {}
-        for name, slug in [filt.split('=') for filt in filter.split('&')]:
-            obj = get_object_or_404(model_by_name[name], slug=slug)
-            if name in filters:
-                filters[name] |= Q(**{name: obj})
-            else:
-                filters[name] = Q(**{name: obj})
+        form_data = {}
+        for filter_category, filter_model in model_by_name.items():
+            slugs = request.GET.get(filter_category)
+            if slugs:
+                slugs = slugs.split(',')
+                form_data[filter_category] = slugs
+                objects = filter_model.objects.filter(slug__in=slugs)
 
-        tmp = list(filters.values())
-        tmp, other_filters = tmp[0], tmp[1:]
-        if len(filters) != 1:
-            for filt in other_filters:
-                tmp &= filt
-        filters = tmp
+                for obj in objects:
+                    q = Q(**{filter_category: obj})
+                    if filter_category in filters:
+                        filters[filter_category] |= q
+                    else:
+                        filters[filter_category] = q
 
-        items = Item.objects.filter(filters).all()
+        form = FilterForm(form_data)
+        items = Item.objects.filter(reduce(iand, filters.values())).all()
         return render(request, 'shop/catalog.html',
                       context={'items': items,
-                               'items_in_cart': Cart(request).get_items()})
+                               'items_in_cart': Cart(request).get_items(),
+                               'form': form
+                               })
+
+    def post(self, request):
+        form = FilterForm(request.POST)
+        if not form.changed_data:
+            return redirect('catalog')
+
+        if form.is_valid():
+            return redirect(reverse('catalog_with_filter') + '?' + filter_str_by_form(form))
+        items = Item.objects.all()
+        return render(request, 'shop/catalog.html',
+                      context={'items': items,
+                               'items_in_cart': Cart(request).get_items(),
+                               'form': form})
+
+
+def filter_str_by_form(form):
+    filter_names = ['brand', 'category', 'country']
+    filter_ = []
+    for name in filter_names:
+        values = form.data.getlist(name)
+        if values:
+            values_str = ','.join(values)
+            filter_.append(f'{name}={values_str}')
+    return '&'.join(filter_)

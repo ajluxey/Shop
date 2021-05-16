@@ -26,8 +26,8 @@ urlpatterns = [
     ])),
     path('', Catalog.as_view(), name='catalog'),
     path('add/', ItemAdd.as_view(), name='item_add'),
+    re_path(r'^filter/$', FilteredCatalog.as_view(), name='catalog_with_filter'),
     path('<str:slug>/', ItemDetail.as_view(), name='item_detail'),
     path('<str:slug>/update/', ItemUpdate.as_view(), name='item_update'),
-    path('<str:slug>/delete/', ItemDelete.as_view(), name='item_delete'),
-    re_path(r'^filter/(.*=.*&?)+/', FilteredCatalog.as_view(), name='catalog_with_filter')
+    path('<str:slug>/delete/', ItemDelete.as_view(), name='item_delete')
 ]

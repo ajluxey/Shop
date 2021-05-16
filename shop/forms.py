@@ -2,6 +2,25 @@ from django import forms
 from .models import Item, Brand, Country, Category
 
 
+class FilterForm(forms.Form):
+    brands_choices = ((b.slug, b.name) for b in Brand.objects.all())
+    category_choices = ((c.slug, c.name) for c in Category.objects.all())
+    country_choices = ((c.slug, c.name) for c in Country.objects.all())
+
+    brand = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
+                                      choices=brands_choices,
+                                      required=False,
+                                      label='Производители')
+    category = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
+                                         choices=category_choices,
+                                         required=False,
+                                         label='Категории')
+    country = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple(),
+                                        choices=country_choices,
+                                        required=False,
+                                        label='Страны')
+
+
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
