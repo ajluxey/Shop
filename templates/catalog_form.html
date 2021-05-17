@@ -19,14 +19,14 @@
                     {% if item.count > 0 %}
                         <p class="card-text">На складе {{ item.count }} шт.</p>
                         {% if item in items_in_cart %}
-                            <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">убрать из корзины</button>
+                            <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">Убрать из корзины</button>
                         {% else %}
                             <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)">В корзину</button>
                         {% endif %}
                     {% else %}
                         <p class="card-text">Нет на складе</p>
                         {% if item in items_in_cart %}
-                            <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">убрать из корзины</button>
+                            <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">Убрать из корзины</button>
                         {% else %}
                             <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)" disabled>В корзину</button>
                         {% endif %}

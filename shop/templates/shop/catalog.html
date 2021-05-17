@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block side_bar %}
-    <div class="col-3 d-none d-md-block d-lg-block">
+    <div class="col-2 d-none d-md-block d-lg-block">
         <form action="" method="post">
             {% csrf_token %}
             <h3>Фильтры</h3>
@@ -26,14 +26,38 @@
                         {{ field.label }}
                     </button>
                     <div class="collapse" id="{{ field.name }}">
-<!--                        <div class="btn-vertical">-->
-                            {{ field }}
-<!--                        </div>-->
+                        {{ field }}
                     </div>
                 {% endfor %}
                 <button type="submit" class="btn btn-primary">Применить</button>
             </div>
         </form>
+    </div>
+    <div class="row container-fluid d-block d-md-none">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#filter-menu" aria-expanded="false" aria-controls="collapseExample">
+            Фильтры
+        </button>
+        <div class="collapse" id="filter-menu">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="p-2 d-grid gap-2">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <div class="alert alert-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                        <button class="btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#{{ field.name }}" aria-expanded="false" aria-controls="collapseExample">
+                            {{ field.label }}
+                        </button>
+                        <div class="collapse" id="{{ field.name }}">
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Применить</button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}
 
