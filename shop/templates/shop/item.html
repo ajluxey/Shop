@@ -11,21 +11,33 @@
 
 {% block body %}
     <h3>{{ item.name }}</h3>
-    <div class="col-lg-4 col-sm-6 col-xs-12 float-left">
-        {% if item.img %}
-            <img src="{{ item.img.url }}" class="card-img-top" alt="...">
-        {% else %}
-            <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
-        {% endif %}
+    <div class="row">
+        <div class="col-lg-4 col-sm-6 col-xs-12 float-left">
+            {% if item.img %}
+                <img src="{{ item.img.url }}" class="card-img-top" alt="...">
+            {% else %}
+                <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
+            {% endif %}
+            <h4>Цена: {{ item.price }} руб.</h4>
+            <h4>На складе: {{ item.count }}</h4>
+            {% if in_cart %}
+                <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">Убрать из корзины</button>
+            {% else %}
+                <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)">В корзину</button>
+            {% endif %}
+        </div>
+        <div class="col">
+            <p>{{ item.desc }}</p>
+            <p>Производитель: <a href="{% url 'brand_detail' slug=item.brand.slug %}">{{ item.brand.name }}</a></p>
+            <p>Категории:
+                {% for category in item.category.all %}
+                    <a href="{% url 'category_detail' slug=category.slug %}">{{ category.name }}</a>
+                {% endfor %}
+            </p>
+            <p>Страна производитель: <a href="{% url 'country_detail' slug=item.country.slug %}">{{ item.country.name }}</a></p>
+        </div>
     </div>
-    <p>{{ item.desc }}</p>
-    <h4>Цена: {{ item.price }} руб.</h4>
-    <h4>На складе: {{ item.count }}</h4>
-    {% if in_cart %}
-        <button class="btn btn-secondary" value="{{ item.id }}" onclick="removeItemFromButton(this)">Убрать из корзины</button>
-    {% else %}
-        <button class="btn btn-primary" value="{{ item.id }}" onclick="addItemFromButton(this)">В корзину</button>
-    {% endif %}
+
 {% endblock %}
 
 {% block manager_panel %}

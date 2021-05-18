@@ -32,7 +32,18 @@
                     </div>
                 {% endfor %}
             </div>
-            <button type="submit" class="btn btn-primary">Отменить заказ</button>
+            <div class="row container-fluid p-3">
+                {% for field in form %}
+                    {% if field.errors %}
+                        <div class="alert alert-danger">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                        {{ field.label }}
+                        {{ field }}
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">Изменить статус заказа</button>
         </div>
     </form>
 {% endblock %}

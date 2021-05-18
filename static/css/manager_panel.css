@@ -6,6 +6,7 @@
     right: 50px;
     bottom: 30px;
     opacity: 0.3;
+    z-index: 99;
 }
 
 .manager-panel:hover {

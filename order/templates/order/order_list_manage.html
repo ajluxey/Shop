@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <h3>Ваши заказы</h3>
+    <h3>Список заказов</h3>
     {% if orders %}
         <table class="table">
             <thead>
@@ -19,7 +19,7 @@
                 {% for order in orders %}
                     <tr>
                         <td scope="row">{{ forloop.counter }}</td>
-                        <td scope="row"><a href="{{ order.get_absolute_url }}">{{ order.slug }}</a></td>
+                        <td scope="row"><a href="{{ order.get_absolute_url }}manage">{{ order.slug }}</a></td>
                         <td scope="row">{{ order.user }}</td>
                         <td scope="row">{{ order.status.desc }}</td>
                         <td scope="row">{{ order.created_at }}</td>
@@ -28,10 +28,6 @@
             </tbody>
         </table>
     {% else %}
-        <p>У вас пока нет заказов</p>
+        <p>Пока нет заказов</p>
     {% endif %}
-{% endblock %}
-
-{% block manager_panel %}
-    <a href="{% url 'order_management' %}" class="btn btn-light">Работа с заказами</a>
 {% endblock %}
