@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponseForbidden
 from django.views.generic import View
 from .models import Order
 from django.utils.decorators import method_decorator
@@ -22,6 +23,8 @@ class OrderList(View):
 class OrderDetail(View):
     def get(self, request, slug):
         order = get_object_or_404(Order, slug=slug)
+        if order.user != request.user and not request.user.groups.filter(name='Manager').exists():
+            return HttpResponseForbidden()
         items = order.items.all()
         oic = order.orderitemcount_set.all()
         id_count = dict(oic.values_list('item_id', 'count'))
@@ -60,6 +63,12 @@ class OrderDetailManage(View):
         if not form.changed_data:
             return redirect('order_management')
         if form.is_valid():
-
-            return redirect('order_management')
+            order = Order.objects.get(slug=slug)
+            if 'status' in form.changed_data:
+                status = OrderStatus.objects.get(status=form.data['status'])
+                order.status = status
+            if 'message' in form.changed_data:
+                order.mes2usr = form.data['message']
+            order.save()
+        return redirect('order_management')
 

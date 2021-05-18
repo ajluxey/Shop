@@ -8,7 +8,7 @@
 {% block body %}
     <form action="" method="post">
         {% csrf_token %}
-        <h3>Заказ {{ order.slug }}</h3>
+        <h3>Заказ {{ order.slug }} - {{ order.status.desc}}</h3>
         <div class="container">
             <div class="row">
                 {% for item in items %}
@@ -32,6 +32,7 @@
                     </div>
                 {% endfor %}
             </div>
+            <h5>{{ order.mes2usr }}</h5>
             <button type="submit" class="btn btn-primary">Отменить заказ</button>
         </div>
     </form>
