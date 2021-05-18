@@ -7,7 +7,7 @@
 {% block body %}
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <p>Изменение товара</p>
+    <h3>Изменение товара</h3>
     {% for field in form %}
         <div class="mb-3">
             {% if field.errors %}
@@ -20,6 +20,7 @@
             {{ field }}
         </div>
     {% endfor %}
+    <a href="{% url 'item_detail' form.instance.slug %}" class="btn btn-primary">Назад</a>
     <button type="submit" class="btn btn-primary">Применить</button>
 </form>
 {% endblock %}

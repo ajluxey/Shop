@@ -7,7 +7,7 @@
 {% block body %}
 <form method="POST">
     {% csrf_token %}
-    <p>Еще нет аккаунта? <a href="{% url 'registration' %}">Зарегистрируйтесь!</a></p>
+    <h5>Еще нет аккаунта? <a href="{% url 'registration' %}">Зарегистрируйтесь!</a></h5>
     <div class="col-4">
         {% for field in form %}
             <div class="mb-3">
