@@ -28,8 +28,9 @@ class Cart:
         user_item_count = UserCart.objects.filter(user_id=user_id)
         item_count = user_item_count.values_list('item_id', 'count')
         for item_id, count in item_count:
-            print(item_id, count)
-            self.add_item(self.item_class.objects.filter(id=item_id).get(), count)
+            query = self.item_class.objects.filter(id=item_id)
+            if len(query) != 0:
+                self.add_item(query.get(), count)
         user_item_count.delete()
 
     def export_cart_to_db(self, user_id):
