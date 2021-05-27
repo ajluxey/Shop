@@ -11,6 +11,7 @@ class Brand(models.Model):
     name = models.CharField(max_length=128, unique=True, verbose_name='Название')
     desc = models.CharField(max_length=512, db_index=True, verbose_name='Описание')
     slug = models.SlugField(max_length=150, unique=True)
+    # updated_at = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse('brand_detail', kwargs={'slug': self.slug})
@@ -27,11 +28,15 @@ class Brand(models.Model):
     def __str__(self):
         return f'Brand: {self.name}'
 
+    class Meta:
+        ordering = ['name']
+
 
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True, verbose_name='Название')
     desc = models.CharField(max_length=512, db_index=True, verbose_name='Описание')
     slug = models.SlugField(max_length=150, unique=True)
+    # updated_at = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse('category_detail', kwargs={'slug': self.slug})
@@ -48,10 +53,14 @@ class Category(models.Model):
     def __str__(self):
         return f'Category: {self.name}'
 
+    class Meta:
+        ordering = ['name']
+
 
 class Country(models.Model):
     name = models.CharField(max_length=128, unique=True, verbose_name='Название')
     slug = models.SlugField(max_length=150, unique=True)
+    # updated_at = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse('country_detail', kwargs={'slug': self.slug})
@@ -68,6 +77,9 @@ class Country(models.Model):
     def __str__(self):
         return f'Country: {self.name}'
 
+    class Meta:
+        ordering = ['name']
+
 
 class Item(models.Model):
     name = models.CharField(max_length=128, unique=True, db_index=True, verbose_name='Название')
@@ -82,6 +94,7 @@ class Item(models.Model):
     category = models.ManyToManyField('Category', related_name='items', blank=True, verbose_name='Категории')
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='items', blank=True, verbose_name='Страна производитель')
     slug = models.SlugField(max_length=150, unique=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse('item_detail', kwargs={'slug': self.slug})
@@ -97,6 +110,9 @@ class Item(models.Model):
 
     def __str__(self):
         return f'Item: {self.name}'
+
+    class Meta:
+        ordering = ['-updated_at']
 
 
 def slug_gen_for(model, name):

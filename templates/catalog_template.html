@@ -1,9 +1,10 @@
 {% load static %}
+{% load users_tags %}
 
 <h3>Товары:</h3>
 <div class="container">
     <div class="row">
-    {% for item in items %}
+    {% for item in page.object_list %}
         <div class="col-lg-4 col-sm-6 col-xs-12 d-flex align-items-stretch mb-4">
             <div class="card">
                 <div class="card-body">
@@ -36,4 +37,38 @@
         </div>
     {% endfor %}
     </div>
+    {% if request.user|in_group:"Manager" or request.user.is_superuser %}
+        <div class="container">
+            <div class="card mb-3" style="width: 18rem;">
+                <div class="card-body">
+                    <a href="{% url 'item_add' %}" class="card-title h5">Добавить Товар</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if is_paginated %}
+        <div class="d-flex justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                        <a class="page-link" href="{{prev_url}}"><</a>
+                    </li>
+                    {% for n in page.paginator.page_range %}
+                        {% if page.number == n %}
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="{{ base_query }}page={{ n }}">{{n}}</a>
+                            </li>
+                        {% elif n > page.number|add:-3 and n < page.number|add:3 %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ base_query }}page={{ n }}">{{n}}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    <li class="page-item {% if not next_url %} disabled {% endif %}">
+                        <a class="page-link" href="{{next_url}}">></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
 </div>
