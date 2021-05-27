@@ -3,14 +3,17 @@ from django.views.generic import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import QueryDict
 
 
 # Create your views here.
 from .models import Item, Brand, Category, Country
 from .forms import ItemForm, BrandForm, CategoryForm, CountryForm, FilterForm
 from cart.cart import Cart
-from .utils import ObjectAddMixin, ObjectDeleteMixin, ObjectUpdateMixin, ObjectsAllMixin
+from .utils import ObjectAddMixin, ObjectDeleteMixin, ObjectUpdateMixin, ObjectsAllMixin, \
+    filter_str_by_form, get_params_about_page
 
 from functools import reduce
 from operator import iand
@@ -23,10 +26,19 @@ class Catalog(View):
     def get(self, request):
         form = FilterForm()
         items = Item.objects.all()
-        return render(request, 'shop/catalog.html',
-                      context={'items': items,
-                               'items_in_cart': Cart(request).get_items(),
-                               'form': form})
+
+        paginator = Paginator(items, 9)
+        page = paginator.get_page(request.GET.get('page', 1))
+        is_paginated, prev_url, next_url = get_params_about_page(page)
+        context = {'page': page,
+                   'items_in_cart': Cart(request).get_items(),
+                   'form': form,
+                   'is_paginated': is_paginated,
+                   'prev_url': prev_url,
+                   'next_url': next_url,
+                   'base_query': '?'}
+
+        return render(request, 'shop/catalog.html', context=context)
 
     def post(self, request):
         form = FilterForm(request.POST)
@@ -34,12 +46,58 @@ class Catalog(View):
             return redirect('catalog')
 
         if form.is_valid():
-            return redirect(reverse('catalog_with_filter') + '?' +  filter_str_by_form(form))
-        items = Item.objects.all()
-        return render(request, 'shop/catalog.html',
-                      context={'items': items,
-                               'items_in_cart': Cart(request).get_items(),
-                               'form': form})
+            return redirect(reverse('catalog_with_filter') + '?' + filter_str_by_form(form))
+        else:
+            return redirect('catalog')
+
+
+class FilteredCatalog(View):
+    def get(self, request):
+        model_by_name = {'category': Category,
+                         'country': Country,
+                         'brand': Brand}
+
+        filters = {}
+        form_data = QueryDict('', mutable=True)
+        for filter_category, filter_model in model_by_name.items():
+            slugs = request.GET.get(filter_category)
+            if slugs:
+                slugs = slugs.split(',')
+                form_data.setlist(filter_category, slugs)
+                objects = filter_model.objects.filter(slug__in=slugs)
+
+                for obj in objects:
+                    q = Q(**{filter_category: obj})
+                    if filter_category in filters:
+                        filters[filter_category] |= q
+                    else:
+                        filters[filter_category] = q
+
+        form = FilterForm(form_data)
+        items = Item.objects.filter(reduce(iand, filters.values())).all()
+        paginator = Paginator(items, 9)
+        page = paginator.get_page(request.GET.get('page', 1))
+        base_query = '?' + filter_str_by_form(form)
+        is_paginated, prev_url, next_url = get_params_about_page(page, base_query=base_query)
+        context = {'page': page,
+                   'items_in_cart': Cart(request).get_items(),
+                   'form': form,
+                   'is_paginated': is_paginated,
+                   'prev_url': prev_url,
+                   'next_url': next_url,
+                   'base_query': base_query + '&'}
+
+        return render(request, 'shop/catalog.html', context=context)
+
+    def post(self, request):
+        form = FilterForm(request.POST)
+        if not form.changed_data:
+            return redirect('catalog')
+
+        if form.is_valid():
+            return redirect(reverse('catalog_with_filter') + '?' + filter_str_by_form(form))
+        else:
+            return redirect('catalog')
 
 
 class ItemDetail(View):
@@ -94,13 +152,25 @@ class ItemDelete(View):
 class BrandsAll(ObjectsAllMixin, View):
     model = Brand
     template = 'shop/brand/brands_list.html'
+    verbose_name = 'Производители'
+    mess_if_empty = 'У нас нет сведений по производителям'
 
 
 class BrandDetail(View):
     def get(self, request, slug):
         brand = get_object_or_404(Brand, slug=slug)
         items = Item.objects.filter(brand=brand)
-        return render(request, 'shop/brand/brand.html', context={'brand': brand, 'items': items, 'items_in_cart': Cart(request).get_items()})
+        paginator = Paginator(items, 9)
+        page = paginator.get_page(request.GET.get('page', 1))
+        is_paginated, prev_url, next_url = get_params_about_page(page)
+        context = {'brand': brand,
+                   'page': page,
+                   'items_in_cart': Cart(request).get_items(),
+                   'is_paginated': is_paginated,
+                   'prev_url': prev_url,
+                   'next_url': next_url,
+                   'base_query': '?'}
+        return render(request, 'shop/brand/brand.html', context=context)
 
 
 @method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_brand')), name='dispatch')
@@ -121,18 +191,31 @@ class BrandUpdate(ObjectUpdateMixin, View):
 class BrandDelete(ObjectDeleteMixin, View):
     model = Brand
     template = 'shop/brand/brand_delete.html'
+    redirect_on_delete = 'brands_list'
 
 
 class CategoriesAll(ObjectsAllMixin, View):
     model = Category
     template = 'shop/category/categories_list.html'
+    verbose_name = 'Категории'
+    mess_if_empty = 'У нас нет сведений о категориях'
 
 
 class CategoryDetail(View):
     def get(self, request, slug):
         category = get_object_or_404(Category, slug=slug)
         items = Item.objects.filter(category=category)
-        return render(request, 'shop/category/category.html', context={'category': category, 'items': items, 'items_in_cart': Cart(request).get_items()})
+        paginator = Paginator(items, 9)
+        page = paginator.get_page(request.GET.get('page', 1))
+        is_paginated, prev_url, next_url = get_params_about_page(page)
+        context = {'category': category,
+                   'page': page,
+                   'items_in_cart': Cart(request).get_items(),
+                   'is_paginated': is_paginated,
+                   'prev_url': prev_url,
+                   'next_url': next_url,
+                   'base_query': '?'}
+        return render(request, 'shop/category/category.html', context=context)
 
 
 @method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_category')), name='dispatch')
@@ -153,18 +236,31 @@ class CategoryUpdate(ObjectUpdateMixin, View):
 class CategoryDelete(ObjectDeleteMixin, View):
     model = Category
     template = 'shop/category/category_delete.html'
+    redirect_on_delete = 'categories_list'
 
 
 class CountriesAll(ObjectsAllMixin, View):
     model = Country
     template = 'shop/country/countries_list.html'
+    verbose_name = 'Страны'
+    mess_if_empty = 'У нас нет сведений о странах'
 
 
 class CountryDetail(View):
     def get(self, request, slug):
         country = get_object_or_404(Country, slug=slug)
         items = Item.objects.filter(country=country)
-        return render(request, 'shop/country/country.html', context={'country': country, 'items': items, 'items_in_cart': Cart(request).get_items()})
+        paginator = Paginator(items, 9)
+        page = paginator.get_page(request.GET.get('page', 1))
+        is_paginated, prev_url, next_url = get_params_about_page(page)
+        context = {'country': country,
+                   'page': page,
+                   'items_in_cart': Cart(request).get_items(),
+                   'is_paginated': is_paginated,
+                   'prev_url': prev_url,
+                   'next_url': next_url,
+                   'base_query': '?'}
+        return render(request, 'shop/country/country.html', context=context)
 
 
 @method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_country')), name='dispatch')
@@ -185,58 +281,4 @@ class CountryUpdate(ObjectUpdateMixin, View):
 class CountryDelete(ObjectDeleteMixin, View):
     model = Country
     template = 'shop/country/country_delete.html'
-
-
-class FilteredCatalog(View):
-    def get(self, request):
-        model_by_name = {'category': Category,
-                         'country': Country,
-                         'brand': Brand}
-
-        filters = {}
-        form_data = {}
-        for filter_category, filter_model in model_by_name.items():
-            slugs = request.GET.get(filter_category)
-            if slugs:
-                slugs = slugs.split(',')
-                form_data[filter_category] = slugs
-                objects = filter_model.objects.filter(slug__in=slugs)
-
-                for obj in objects:
-                    q = Q(**{filter_category: obj})
-                    if filter_category in filters:
-                        filters[filter_category] |= q
-                    else:
-                        filters[filter_category] = q
-
-        form = FilterForm(form_data)
-        items = Item.objects.filter(reduce(iand, filters.values())).all()
-        return render(request, 'shop/catalog.html',
-                      context={'items': items,
-                               'items_in_cart': Cart(request).get_items(),
-                               'form': form
-                               })
-
-    def post(self, request):
-        form = FilterForm(request.POST)
-        if not form.changed_data:
-            return redirect('catalog')
-
-        if form.is_valid():
-            return redirect(reverse('catalog_with_filter') + '?' + filter_str_by_form(form))
-        items = Item.objects.all()
-        return render(request, 'shop/catalog.html',
-                      context={'items': items,
-                               'items_in_cart': Cart(request).get_items(),
-                               'form': form})
-
-
-def filter_str_by_form(form):
-    filter_names = ['brand', 'category', 'country']
-    filter_ = []
-    for name in filter_names:
-        values = form.data.getlist(name)
-        if values:
-            values_str = ','.join(values)
-            filter_.append(f'{name}={values_str}')
-    return '&'.join(filter_)
+    redirect_on_delete = 'countries_list'
