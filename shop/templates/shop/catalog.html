@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load users_tags %}
 
 {% block title %}
     Магазин
@@ -62,14 +61,5 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'catalog_form.html' %}
-    {% if request.user|in_group:"Manager" or request.user.is_superuser %}
-        <div class="container">
-            <div class="card mb-3" style="width: 18rem;">
-                <div class="card-body">
-                    <a href="{% url 'item_add' %}" class="card-title h5">Добавить Товар</a>
-                </div>
-            </div>
-        </div>
-    {% endif %}
+    {% include 'catalog_template.html' %}
 {% endblock %}
