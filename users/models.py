@@ -8,7 +8,7 @@ from .managers import CustomUserManager
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
-        verbose_name = 'Пользователи'
+        verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
     first_name = models.CharField(max_length=128, db_index=True, verbose_name='Имя')
     last_name = models.CharField(max_length=128, db_index=True, verbose_name='Фамилия')
