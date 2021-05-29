@@ -1,5 +1,5 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 
-def redirect_to_shop(request):
-    return redirect('catalog', permanent=True)
+def home_page(request):
+    return render(request, 'base/home.html')

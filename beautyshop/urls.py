@@ -18,14 +18,14 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
-from .views import redirect_to_shop
+from .views import *
 
 urlpatterns = [
-    path('', redirect_to_shop, name='home'),
+    path('', home_page, name='home'),
     path('admin/', admin.site.urls),
     path('shop/', include('shop.urls')),
     path('users/', include('users.urls')),
     path('cart/', include('cart.urls')),
     path('test/', include('testmodule.urls')),
-    path('order/', include('order.urls'))
+    path('order/', include('order.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -31,7 +31,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle h5" href="{% url 'catalog' %}" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle h5" href="/" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Каталог
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -56,7 +56,7 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link h5" href="{% url 'login' %}">Вход</a>
+                            <a class="nav-link h5" href="{% url 'login' %}">Личный кабинет</a>
                         </li>
                     {% endif %}
                 </ul>
