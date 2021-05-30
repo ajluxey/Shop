@@ -32,7 +32,7 @@
                         <a class="nav-link h5" href="{% url 'cart_detail' %}">Корзина</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link h5" href="{% url 'login' %}">Личный кабинет</a>
+                        <a class="nav-link h5" href="{% url 'login' %}">{% if request.user.is_authenticated %}{{ request.user }}{% else %}Личный кабинет{%endif%}</a>
                     </li>
                 </ul>
             </div>

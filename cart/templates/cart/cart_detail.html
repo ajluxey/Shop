@@ -47,7 +47,7 @@
                 <button type="submit" class="btn btn-primary">Оформить заказ</button>
             {% else %}
                 <h4>Войдите чтобы оформить заказ</h4>
-                <a href="{% url 'login' %}?next={% url 'cart_detail'%}">Вход</a>
+                <a class="btn btn-primary mb-3" href="{% url 'login' %}?next={% url 'cart_detail'%}">Вход</a>
             {% endif %}
         {% else %}
             <p>Корзина пока пуста</p>
