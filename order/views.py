@@ -11,19 +11,16 @@ from .forms import OrderManageForm
 # Create your views here.
 
 
-# TODO: сделать нормальный слаг, потому что он вставляет id до создания
-@method_decorator(user_passes_test(lambda u: u.has_perm('order.view_order')), name='dispatch')
 class OrderList(View):
     def get(self, request):
         orders = Order.objects.filter(user_id=request.user.id).order_by('-created_at').all()
         return render(request, 'order/order_list.html', context={'orders': orders})
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('order.view_order')), name='dispatch')
 class OrderDetail(View):
     def get(self, request, slug):
         order = get_object_or_404(Order, slug=slug)
-        if order.user != request.user and not request.user.groups.filter(name='Manager').exists():
+        if order.user != request.user and not request.user.is_superuser and not request.user.groups.filter(name='Manager').exists():
             return HttpResponseForbidden()
         items = order.items.all()
         oic = order.orderitemcount_set.all()

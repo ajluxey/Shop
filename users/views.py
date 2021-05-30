@@ -1,10 +1,12 @@
-from django.views.generic import CreateView
+from django.views.generic import CreateView, View
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseForbidden
 
-from .forms import CustomUser, CustomUserCreationForm, CustomUserAuthForm
+from .forms import CustomUser, CustomUserCreationForm, CustomUserAuthForm, CustomUserSafetyChangeForm
+from order.models import Order
 
 # Create your views here.
 
@@ -37,3 +39,32 @@ class RegisterUser(CreateView):
         auth_user = authenticate(email=email, password=password)
         login(self.request, auth_user)
         return form_valid
+
+
+class UserProfile(View):
+    def get(self, request, user_id):
+        if request.user.id != user_id and not request.user.is_superuser and not request.user.groups.filter(name='Manager').exists():
+            return HttpResponseForbidden()
+        user = get_object_or_404(CustomUser, id=user_id)
+        orders = Order.objects.filter(user=user.id).all()[:10]
+        return render(request, 'users/profile.html', context={'user': user, 'orders': orders})
+
+
+class ProfileChange(View):
+    def get(self, request, user_id):
+        if request.user.id != user_id:
+            return HttpResponseForbidden()
+        user = get_object_or_404(CustomUser, id=user_id)
+        bound_form = CustomUserSafetyChangeForm(instance=user)
+        return render(request, 'users/profile_update.html', context={'form': bound_form})
+
+    def post(self, request, user_id):
+        if request.user.id != user_id:
+            return HttpResponseForbidden()
+        user = get_object_or_404(CustomUser, id=user_id)
+        bound_form = CustomUserSafetyChangeForm(request.POST, instance=user)
+        if bound_form.is_valid():
+            user = bound_form.save()
+            return redirect(user)
+        return render(request, 'shop/item_add.html', context={'form': bound_form})
+

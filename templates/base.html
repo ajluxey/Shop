@@ -49,7 +49,7 @@
                             <a class="nav-link h5" href="{% url 'order_list' %}">Заказы</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link disabled h5" href="#" tabindex="-1" aria-disabled="true">{{ request.user }}</a>
+                            <a class="nav-link h5" href="{% url 'profile' request.user.id %}">{{ request.user }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link h5" href="{% url 'logout' %}">Выход</a>

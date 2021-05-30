@@ -31,9 +31,15 @@
                     <li class="nav-item">
                         <a class="nav-link h5" href="{% url 'cart_detail' %}">Корзина</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link h5" href="{% url 'login' %}">{% if request.user.is_authenticated %}{{ request.user }}{% else %}Личный кабинет{%endif%}</a>
-                    </li>
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link h5" href="{% url 'profile' request.user.id %}">{{ request.user }}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link h5" href="{% url 'login' %}">Личный кабинет</a>
+                        </li>
+                    {%endif%}
                 </ul>
             </div>
         </div>

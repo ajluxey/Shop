@@ -25,7 +25,7 @@
                                     {% else %}
                                         <img src="{% static 'media/images/main/no_img.png' %}" class="card-img-top" alt="...">
                                     {% endif %}
-                                    <a href="{{ item.get_absolute_url }}" class="card-title h5">{{ item.name }}</a>
+                                    <a href="{{ item.get_absolute_url }}" class="card-title h5"><p class="text-truncate">{{ item.name }}</p></a>
                                     <p class="card-text text-truncate">{{ item.desc }}</p>
                                     <p class="card-text">{{ item.price }} руб.</p>
                                     {% for item_id, count in id_count.items %}

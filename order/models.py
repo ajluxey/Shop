@@ -56,6 +56,9 @@ class Order(models.Model):
             self.slug = self.slug_gen()
         super().save(*args, **kwargs)
 
+    class Meta:
+        ordering = ['-created_at']
+
 
 class OrderItemCount(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

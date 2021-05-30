@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ request.user }}
+{% endblock %}
+
+{% block body %}
+    <h3>Личный кабинет</h3>
+    <h4>{{ user }}</h4>
+    <p>{{ user.email }}</p>
+    <p>{{ user.phone}}</p>
+    <a href="{% url 'profile_update' user_id=user.id %}" class="btn btn-primary">Настроить</a>
+
+    <h3 class="mt-5">Последние заказы</h3>
+    {% if orders %}
+        <table class="table">
+            <thead>
+                <th scope="col">№</th>
+                <th scope="col">Номер заказа</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Время оформления</th>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td scope="row">{{ forloop.counter }}</td>
+                        <td scope="row"><a href="{{ order.get_absolute_url }}">{{ order.slug }}</a></td>
+                        <td scope="row">{{ order.status.desc }}</td>
+                        <td scope="row">{{ order.created_at }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'order_list' %}">Перейти к заказам</a>
+    {% else %}
+        <p>У вас пока нет заказов</p>
+    {% endif %}
+{% endblock %}

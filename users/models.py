@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
+from django.shortcuts import reverse
 from django.utils import timezone
 
 from .managers import CustomUserManager
@@ -21,6 +22,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'phone']
     objects = CustomUserManager()
+
+    def get_absolute_url(self):
+        return reverse('profile', kwargs={'user_id': self.id})
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name

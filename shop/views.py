@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse, HttpResponse
 from django.views.generic import View
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import QueryDict
@@ -107,7 +106,7 @@ class ItemDetail(View):
         return render(request, 'shop/item.html', context={'item': item, 'in_cart': in_cart})
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_item')), name='dispatch')
+# @method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_item')), name='dispatch')
 class ItemAdd(View):
     def get(self, request):
         form = ItemForm()
@@ -121,7 +120,6 @@ class ItemAdd(View):
         return render(request, 'shop/item_add.html', context={'form': bound_form})
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.change_item')), name='dispatch')
 class ItemUpdate(View):
     def get(self, request, slug):
         item = get_object_or_404(Item, slug=slug)
@@ -137,7 +135,6 @@ class ItemUpdate(View):
         return render(request, 'shop/item_update.html', context={'form': bound_form})
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.delete_item')), name='dispatch')
 class ItemDelete(View):
     def get(self, request, slug):
         item = get_object_or_404(Item, slug=slug)
@@ -173,21 +170,18 @@ class BrandDetail(View):
         return render(request, 'shop/brand/brand.html', context=context)
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_brand')), name='dispatch')
 class BrandAdd(ObjectAddMixin, View):
     model = Brand
     template = 'shop/brand/brand_add.html'
     form = BrandForm
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.change_brand')), name='dispatch')
 class BrandUpdate(ObjectUpdateMixin, View):
     model = Brand
     template = 'shop/brand/brand_update.html'
     form = BrandForm
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.delete_brand')), name='dispatch')
 class BrandDelete(ObjectDeleteMixin, View):
     model = Brand
     template = 'shop/brand/brand_delete.html'
@@ -218,21 +212,18 @@ class CategoryDetail(View):
         return render(request, 'shop/category/category.html', context=context)
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_category')), name='dispatch')
 class CategoryAdd(ObjectAddMixin, View):
     model = Category
     template = 'shop/category/category_add.html'
     form = CategoryForm
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.change_category')), name='dispatch')
 class CategoryUpdate(ObjectUpdateMixin, View):
     model = Category
     template = 'shop/category/category_update.html'
     form = CategoryForm
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.delete_category')), name='dispatch')
 class CategoryDelete(ObjectDeleteMixin, View):
     model = Category
     template = 'shop/category/category_delete.html'
@@ -263,21 +254,18 @@ class CountryDetail(View):
         return render(request, 'shop/country/country.html', context=context)
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_country')), name='dispatch')
 class CountryAdd(ObjectAddMixin, View):
     model = Country
     template = 'shop/country/country_add.html'
     form = CountryForm
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.change_country')), name='dispatch')
 class CountryUpdate(ObjectUpdateMixin, View):
     model = Country
     template = 'shop/country/country_update.html'
     form = CountryForm
 
 
-@method_decorator(user_passes_test(lambda u: u.has_perm('shop.delete_country')), name='dispatch')
 class CountryDelete(ObjectDeleteMixin, View):
     model = Country
     template = 'shop/country/country_delete.html'
