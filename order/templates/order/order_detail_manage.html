@@ -5,6 +5,10 @@
     Заказ {{ order.slug }}
 {% endblock %}
 
+{% block css_style%}
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+{% endblock%}
+
 {% block body %}
     <form action="" method="post">
         {% csrf_token %}
@@ -43,7 +47,7 @@
                         {{ field }}
                 {% endfor %}
             </div>
-            <button type="submit" class="btn btn-primary">Изменить статус заказа</button>
+            <button type="submit" class="btn btn-primary mb-3">Изменить статус заказа</button>
         </div>
     </form>
 {% endblock %}

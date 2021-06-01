@@ -15,7 +15,6 @@ class LoginUser(LoginView):
     template_name = 'users/login.html'
     form_class = CustomUserAuthForm
     success_url = reverse_lazy('catalog')
-    success_message = 'Welcome to the CUM zone'
 
     def get_success_url(self):
         url = self.get_redirect_url()
@@ -43,7 +42,9 @@ class RegisterUser(CreateView):
 
 class UserProfile(View):
     def get(self, request, user_id):
-        if request.user.id != user_id and not request.user.is_superuser and not request.user.groups.filter(name='Manager').exists():
+        if request.user.id != user_id \
+                and not request.user.is_superuser \
+                and not request.user.groups.filter(name='Manager').exists():
             return HttpResponseForbidden()
         user = get_object_or_404(CustomUser, id=user_id)
         orders = Order.objects.filter(user=user.id).all()[:10]

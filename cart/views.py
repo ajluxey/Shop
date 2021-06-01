@@ -19,9 +19,10 @@ class CartDetail(View):
         items = cart.get_items()
         id_count = cart.get_id_count()
         total_price = cart.get_total_price()
-        return render(request, 'cart/cart_detail.html', context={'items': items,
-                                                                 'id_count': id_count,
-                                                                 'total_price': total_price})
+        return render(request, 'cart/cart_detail.html',
+                      context={'items': items,
+                               'id_count': id_count,
+                               'total_price': total_price})
 
     def post(self, request):    # оформление заказа
         if request.user.is_authenticated:

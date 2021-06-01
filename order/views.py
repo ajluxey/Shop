@@ -20,7 +20,9 @@ class OrderList(View):
 class OrderDetail(View):
     def get(self, request, slug):
         order = get_object_or_404(Order, slug=slug)
-        if order.user != request.user and not request.user.is_superuser and not request.user.groups.filter(name='Manager').exists():
+        if order.user != request.user \
+                and not request.user.is_superuser \
+                and not request.user.groups.filter(name='Manager').exists():
             return HttpResponseForbidden()
         items = order.items.all()
         oic = order.orderitemcount_set.all()
@@ -29,7 +31,6 @@ class OrderDetail(View):
                                                                    'items': items,
                                                                    'id_count': id_count})
 
-    # TODO: сделать возврат товара на склад, но нужно ли?
     def post(self, request, slug):
         order = get_object_or_404(Order, slug=slug)
         order.status = OrderStatus.objects.get(status='CANCELED')

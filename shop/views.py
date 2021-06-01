@@ -106,7 +106,6 @@ class ItemDetail(View):
         return render(request, 'shop/item.html', context={'item': item, 'in_cart': in_cart})
 
 
-# @method_decorator(user_passes_test(lambda u: u.has_perm('shop.add_item')), name='dispatch')
 class ItemAdd(View):
     def get(self, request):
         form = ItemForm()

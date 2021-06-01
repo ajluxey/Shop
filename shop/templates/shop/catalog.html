@@ -5,6 +5,10 @@
     Магазин
 {% endblock %}
 
+{% block css_style%}
+<link href="{% static 'css/main.css' %}" rel="stylesheet">
+{% endblock%}
+
 {% block js_scripts %}
     <script src="{% static 'js/cart_manager.js' %}"></script>
 {% endblock %}
@@ -24,7 +28,7 @@
                     <button class="btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#{{ field.name }}" aria-expanded="false" aria-controls="collapseExample">
                         {{ field.label }}
                     </button>
-                    <div class="collapse" id="{{ field.name }}">
+                    <div class="filters collapse" id="{{ field.name }}">
                         {{ field }}
                     </div>
                 {% endfor %}
