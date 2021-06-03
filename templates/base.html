@@ -75,6 +75,13 @@
             {% block manager_panel %}{%endblock%}
         </div>
     {% endif %}
+
+    {% if request.user.is_superuser %}
+        <div class="manager-panel" style="left: 50px; right: auto">
+            <a href="/admin" class="btn btn-primary">Админка</a>
+        </div>
+    {% endif %}
+
     {% if messages %}
         {% for message in messages %}
             <div class="row justify-content-end">

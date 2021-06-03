@@ -50,7 +50,7 @@ class OrderDetailManage(View):
         items = order.items.all()
         oic = order.orderitemcount_set.all()
         id_count = dict(oic.values_list('item_id', 'count'))
-        form = OrderManageForm({'status': order.status.status})
+        form = OrderManageForm({'status': order.status.status, 'message': order.mes2usr})
         return render(request, 'order/order_detail_manage.html', context={'order': order,
                                                                           'items': items,
                                                                           'id_count': id_count,
